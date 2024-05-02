@@ -5,7 +5,7 @@ host = "0.0.0.0"
 port = 7777
 banner = """
 == Guessing Game v1.0 ==
-Enter your guess: """
+Enter your guess:"""
 
 
 def generate_random_int(difficulty):
@@ -15,17 +15,15 @@ def generate_random_int(difficulty):
         return random.randint(1, 100)
     elif difficulty == "hard":
         return random.randint(1, 500)
-    else:
-        raise ValueError("Invalid difficulty level")
 
 
 def leaderboard_file():
     leaderboard = {}
     try:
-        with open("Leaderboard.txt", "r") as file:
+        with open("leaderboard.txt", "r") as file:
             for line in file:
                 name, score, difficulty = line.strip().split(",")
-                leaderboard[name] = {"score": int(score), "difficulty": difficulty}
+                leaderboard[name] = {"score": int(score), "difficulty:": difficulty}
     except FileNotFoundError:
         pass
     return leaderboard
@@ -52,15 +50,18 @@ while True:
         print("waiting for connection..")
         conn, addr = s.accept()
         print(f"new client: {addr[0]}")
-        conn.sendall(b"Enter your name: ")
-        name = conn.recv(1024).decode().strip().lower()
         conn.sendall(
             b"Choose difficulty level: easy (1-50), medium (1-100), hard (1-500): "
         )
         difficulty = conn.recv(1024).decode().strip().lower()
+        conn.sendall(b"Enter your name: ")
+        name = conn.recv(1024).decode().strip()
+
         userdata = leaderboard.get(name, {"score": 0, "difficulty": difficulty})
         score = userdata["score"]
         difficulty = userdata["difficulty"]
+        # cheat_str = f"==== number to guess is {guessme} \n" + banner
+        # conn.sendall(cheat_str.encode())
         guessme = generate_random_int(difficulty)
         conn.sendall(banner.encode())
     else:
