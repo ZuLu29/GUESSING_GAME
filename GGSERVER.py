@@ -43,6 +43,8 @@ s.listen(5)
 print(f"server is listening in port {port}")
 guessme = 0
 conn = None
+
+leaderboard = leaderboard_file.read()
 while True:
     if conn is None:
         print("waiting for connection..")
@@ -55,6 +57,9 @@ while True:
         difficulty = conn.recv(1024).decode().strip().lower()
         conn.sendall(b"Enter your name: ")
         name = conn.recv(1024).decode().strip().lower()
+        userdata = leaderboard.get(name, {"score": 0, "difficulty": difficulty})
+        score = userdata["score"]
+        difficulty = userdata["difficulty"]
         guessme = generate_random_int(difficulty)
         conn.sendall(banner.encode)
     else:
@@ -62,6 +67,11 @@ while True:
         guess = int(client_input.decode().strip())
         print(f"User guess attempt: {guess}")
         if guess == guessme:
+            leaderboard[name] = {
+                "score": leaderboard(name, {"score": 0})["score"] + 1,
+                "difficulty": difficulty,
+            }
+
             conn.sendall(b"Correct Answer!")
             conn.close()
             conn = None
