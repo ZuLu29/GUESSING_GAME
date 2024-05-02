@@ -29,6 +29,12 @@ def leaderboard_file():
     return leaderboard
 
 
+def savefile(leaderboard):
+    with open("leaderboard.txt", "w") as file:
+        for name, data in leaderboard.items():
+            file.write(f"{name}, {data['score']}, {data['difficulty']}\n")
+
+
 # initialize the socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host, port))
