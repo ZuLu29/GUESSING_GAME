@@ -1,7 +1,7 @@
 import socket
 
 
-host = "10.125.41.154"
+host = "localhost"
 port = 7777
 
 

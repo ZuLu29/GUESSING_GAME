@@ -8,8 +8,13 @@ banner = """
 Enter your guess:"""
 
 
-def generate_random_int(low, high):
-    return random.randint(low, high)
+def generate_random_int(difficulty):
+    if difficulty == "easy":
+        return random.randint(1, 50)
+    elif difficulty == "medium":
+        return random.randint(1, 100)
+    else:
+        return random.randint(1, 500)
 
 
 # initialize the socket object
@@ -24,11 +29,16 @@ while True:
     if conn is None:
         print("waiting for connection..")
         conn, addr = s.accept()
-        guessme = generate_random_int(1, 100)
         print(f"new client: {addr[0]}")
-        # cheat_str = f"==== number to guess is {guessme} \n" + banner
-        # conn.sendall(cheat_str.encode())
         conn.sendall(banner.encode())
+        conn.sendall(
+            b"Choose difficulty level: easy (1-50), medium (1-100), hard (1-500): "
+        )
+        difficulty = conn.recv(1024).decode().strip().lower()
+        conn.sendall(b"Enter your name: ")
+        name = conn.recv(1024).decode().strip().lower()
+        guessme = generate_random_int(difficulty)
+        conn.sendall(banner.encode)
     else:
         client_input = conn.recv(1024)
         guess = int(client_input.decode().strip())
