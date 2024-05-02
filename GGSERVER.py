@@ -44,7 +44,7 @@ print(f"server is listening in port {port}")
 guessme = 0
 conn = None
 
-leaderboard = leaderboard_file.read()
+leaderboard = leaderboard_file()
 while True:
     if conn is None:
         print("waiting for connection..")
@@ -60,7 +60,7 @@ while True:
         score = userdata["score"]
         difficulty = userdata["difficulty"]
         guessme = generate_random_int(difficulty)
-        conn.sendall(banner.encode)
+        conn.sendall(banner.encode())
     else:
         client_input = conn.recv(1024)
         guess = int(client_input.decode().strip())
