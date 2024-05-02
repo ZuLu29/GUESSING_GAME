@@ -1,0 +1,2 @@
+neil, 1, easy
+niga, 1, hard
