@@ -4,7 +4,6 @@ import socket
 host = "localhost"
 port = 7777
 
-
 while True:
     s = socket.socket()
     s.connect((host, port))
@@ -12,6 +11,12 @@ while True:
     # received the banner
     data = s.recv(1024)
     # print banner
+    print(data.decode().strip())
+
+    difficulty = input("").strip().lower()
+    s.sendall(difficulty.encode())
+
+    data = s.recv(1024)
     print(data.decode().strip())
 
     while True:
