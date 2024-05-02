@@ -17,6 +17,18 @@ def generate_random_int(difficulty):
         return random.randint(1, 500)
 
 
+def leaderboard_file():
+    leaderboard = {}
+    try:
+        with open("Leaderboard.txt", "r") as file:
+            for line in file:
+                name, score, difficulty = line.strip().split(",")
+                leaderboard[name] = {"score": int(score), "difficulty": difficulty}
+    except FileNotFoundError:
+        pass
+    return leaderboard
+
+
 # initialize the socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((host, port))
