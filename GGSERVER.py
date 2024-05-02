@@ -50,7 +50,6 @@ while True:
         print("waiting for connection..")
         conn, addr = s.accept()
         print(f"new client: {addr[0]}")
-        conn.sendall(banner.encode())
         conn.sendall(
             b"Choose difficulty level: easy (1-50), medium (1-100), hard (1-500): "
         )
@@ -68,11 +67,12 @@ while True:
         print(f"User guess attempt: {guess}")
         if guess == guessme:
             leaderboard[name] = {
-                "score": leaderboard(name, {"score": 0})["score"] + 1,
+                "score": leaderboard.get(name, {"score": 0})["score"] + 1,
                 "difficulty": difficulty,
             }
-
-            conn.sendall(b"Correct Answer!")
+            savefile(leaderboard)
+            score = f"Correct Answer! {name} score: {leaderboard[name]['score']}\n"
+            conn.sendall(score.encode())
             conn.close()
             conn = None
             continue
