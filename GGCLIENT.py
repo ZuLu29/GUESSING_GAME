@@ -33,5 +33,7 @@ while True:
     s.close()
 
     again = input("Do you want to play again? Enter YES or NO: ").strip().lower()
-    if again != "yes":
+    if again == "yes":
+        continue
+    elif again == "no":
         break
